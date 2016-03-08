@@ -15,13 +15,13 @@
 # cookie value that the browser uses for the next calls.
 
 # Note : Replace "TENANT_NAME" with your tenant name you wish to post to in the POST URL
-POST URL: http://APIC-IP/api/mo/uni/tn-TENANT_NAME.json
-Content-Type: application/json
-Cache-Control: no-cache
+# POST URL: http://APIC-IP/api/mo/uni/tn-TENANT_NAME.json
+# Content-Type: application/json
+# Cache-Control: no-cache
 
 ####################################################################################
 
-POST BODY : (Post objects individually if using Postman)
+# POST BODY : (Post objects individually if using Postman)
 
 ###################################
 # OBJECT 1: Media-Master-Contract #
