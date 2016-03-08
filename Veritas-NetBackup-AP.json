@@ -1,0 +1,271 @@
+
+# Configure a three-tired Application Profile, EPGs, contracts,
+# and subjects for the Veritas NetBackup application
+
+# Note : After import, you must still perform the following custom to your environment:
+	# Associate domain(s) to EPGs
+	# Add subnet(s) to NetBackup-BD
+
+# Note: Ensure your session is authenticated before POSTing the below profile, e.g.:
+# Authenticate: Call https://<IP of APIC controller>/api/mo/aaaLogin.xml with a payload 
+# that in XML is <aaaUser name='username' pwd= 'password'/>. This call returns a 
+# cookie value that the browser uses for the next calls.
+
+# Note : Replace "TENANT_NAME" with the tenant name in the POST URL
+POST URL: http://APIC-IP/api/mo/uni/tn-TENANT_NAME.json
+Content-Type: application/json
+Cache-Control: no-cache
+
+####################################################################################
+
+POST BODY : (Post objects individually if using Postman)
+
+###################################
+# OBJECT 1: Media-Master-Contract #
+###################################
+
+{
+    "vzBrCP": {
+        "attributes": {
+            "name": "Media-Master-Contract"
+        },
+        "children": [
+            {
+                "vzSubj": {
+                    "attributes": {
+                        "name": "Media-Master-Subject"
+                    },
+                    "children": [
+                        {
+                            "vzRsSubjFiltAtt": {
+                                "attributes": {
+                                    "tnVzFilterName": "default"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+ 
+###################################
+# OBJECT 2: Client-Media-Contract #
+###################################
+
+{
+    "vzBrCP": {
+        "attributes": {
+            "name": "Client-Media-Contract"
+        },
+        "children": [
+            {
+                "vzSubj": {
+                    "attributes": {
+                        "name": "Client-Media-Subject"
+                    },
+                    "children": [
+                        {
+                            "vzRsSubjFiltAtt": {
+                                "attributes": {
+                                    "tnVzFilterName": "default"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+####################################
+# OBJECT 3: Client-Master-Contract #
+####################################
+
+{
+    "vzBrCP": {
+        "attributes": {
+            "name": "Client-Master-Contract"
+        },
+        "children": [
+            {
+                "vzSubj": {
+                    "attributes": {
+                        "name": "Client-Master-Subject"
+                    },
+                    "children": [
+                        {
+                            "vzRsSubjFiltAtt": {
+                                "attributes": {
+                                    "tnVzFilterName": "default"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        ]
+    }
+}
+
+###########################
+# OBJECT 4: Bridge Domain #
+###########################
+
+{
+    "fvBD": {
+        "attributes": {
+            "name": "NetBackup-BD"
+        }
+    }
+}
+
+#################################
+# OBJECT 5: Application Profile #
+#################################
+
+{
+    "fvAp": {
+		"attributes": {
+			"name": "NetBackup-AP"
+		},
+		"children": [
+            {
+				"fvAEPg": {
+			   		"attributes": {
+						"name": "Client-EPG"
+					},
+					"children": [
+						{
+							"fvRsBd": {
+                            	"attributes": {
+                                	"tnFvBDName": "NetBackup-BD"
+                            	}
+                           	}
+                        },
+                        {
+                        	"fvRsCons": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Media-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsCons": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Master-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsProv": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Media-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsProv": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Master-Contract"
+                            	}
+                        	}
+						}
+					]
+				}
+			},
+			{
+				"fvAEPg": {
+			   		"attributes": {
+						"name": "Master-EPG"
+					},
+					"children": [
+						{
+							"fvRsBd": {
+                            	"attributes": {
+                                	"tnFvBDName": "NetBackup-BD"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsCons": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Media-Master-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsCons": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Master-Contract"
+                            	}
+                        	}
+                        }
+                        {
+                        	"fvRsProv": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Media-Master-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsProv": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Master-Contract"
+                            	}
+                        	}
+						}
+					]
+				}
+			},
+			{
+				"fvAEPg": {
+			   		"attributes": {
+						"name": "Media-EPG"
+					},
+					"children": [
+						{
+							"fvRsBd": {
+                            	"attributes": {
+                                	"tnFvBDName": "NetBackup-BD"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsCons": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Media-Master-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsCons": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Media-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsProv": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Media-Master-Contract"
+                            	}
+                        	}
+                        },
+                        {
+                        	"fvRsProv": {
+                            	"attributes": {
+                               		"tnVzBrCPName": "Client-Media-Contract"
+                            	}
+                        	}
+						}
+					]
+				}
+			}
+		]
+	}
+}
+
+####################################################################################
