@@ -1,8 +1,11 @@
 
+# Veritas NetBackup Cisco ACI Application Profile
+# Carly Stoughton, March 2016
+
 # Configure a three-tired Application Profile, EPGs, contracts,
 # and subjects for the Veritas NetBackup application
 
-# Note : After import, you must still perform the following custom to your environment:
+# Note : After import, you must still perform the following to customize the AP to your environment:
 	# Associate domain(s) to EPGs
 	# Add subnet(s) to NetBackup-BD
 
@@ -11,14 +14,14 @@
 # that in XML is <aaaUser name='username' pwd= 'password'/>. This call returns a 
 # cookie value that the browser uses for the next calls.
 
-# Note : Replace "TENANT_NAME" with the tenant name in the POST URL
-# POST URL: http://APIC-IP/api/mo/uni/tn-TENANT_NAME.json
-# Content-Type: application/json
-# Cache-Control: no-cache
+# Note : Replace "TENANT_NAME" with your tenant name you wish to post to in the POST URL
+POST URL: http://APIC-IP/api/mo/uni/tn-TENANT_NAME.json
+Content-Type: application/json
+Cache-Control: no-cache
 
 ####################################################################################
 
-# POST BODY : (Post objects individually if using Postman)
+POST BODY : (Post objects individually if using Postman)
 
 ###################################
 # OBJECT 1: Media-Master-Contract #
